@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 import 'package:get/get.dart';
 import 'package:liquid_progress_indicator/liquid_progress_indicator.dart';
 import 'package:qpc/app/data/models/counter_model.dart';
@@ -16,7 +15,9 @@ class HomeView extends GetView<HomeController> {
         leading: PopupMenuButton(
           onSelected: (v) {
             if (v == 0) {
-              controller.init();
+              controller.initCounter();
+            } else if (v == 1) {
+              controller.initScore();
             } else {
               Get.toNamed(Routes.ABOUT);
             }
@@ -25,10 +26,14 @@ class HomeView extends GetView<HomeController> {
             return [
               const PopupMenuItem<int>(
                 value: 0,
-                child: Text('Réinitialiser'),
+                child: Text('Réinitialiser le compte à rebours'),
               ),
               const PopupMenuItem<int>(
                 value: 1,
+                child: Text('Réinitialiser les scores'),
+              ),
+              const PopupMenuItem<int>(
+                value: 2,
                 child: Text('A propos'),
               )
             ];
@@ -38,39 +43,51 @@ class HomeView extends GetView<HomeController> {
       ),
       body: Stack(
         children: [
+          Positioned.fill(
+            child: Image.asset("assets/images/samson.jpg", fit: BoxFit.cover),
+          ),
           Center(
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Container(
                   width: Get.width * .4,
-                  child: Center(
-                    child: TextField(
-                      controller: controller.user1NameCtrl,
-                      textAlign: TextAlign.center,
-                      style: TextStyle(fontSize: 40),
-                      decoration: InputDecoration(
-                        hintText: "user1",
-                        border: InputBorder.none,
+                  child: Align(
+                    alignment: Alignment.topCenter,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: Colors.white.withOpacity(0.5),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: TextField(
+                        controller: controller.user1NameCtrl,
+                        textAlign: TextAlign.center,
+                        style: TextStyle(fontSize: 45),
+                        decoration: InputDecoration(
+                          hintText: "user1",
+                          border: InputBorder.none,
+                        ),
                       ),
                     ),
                   ),
                 ),
                 Container(
-                  width: 2,
-                  height: Get.height,
-                  color: Colors.grey[300],
-                ),
-                Container(
                   width: Get.width * .4,
-                  child: Center(
-                    child: TextField(
-                      controller: controller.user2NameCtrl,
-                      textAlign: TextAlign.center,
-                      style: TextStyle(fontSize: 40),
-                      decoration: InputDecoration(
-                        hintText: "user2",
-                        border: InputBorder.none,
+                  child: Align(
+                    alignment: Alignment.topCenter,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: Colors.white.withOpacity(0.5),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: TextField(
+                        controller: controller.user2NameCtrl,
+                        textAlign: TextAlign.center,
+                        style: TextStyle(fontSize: 45),
+                        decoration: InputDecoration(
+                          hintText: "user2",
+                          border: InputBorder.none,
+                        ),
                       ),
                     ),
                   ),
@@ -96,7 +113,7 @@ class HomeView extends GetView<HomeController> {
                       width: 100,
                       height: 60,
                       decoration: BoxDecoration(
-                        color: Colors.orange,
+                        color: Colors.red,
                         borderRadius: BorderRadius.circular(30),
                       ),
                       child: Center(
@@ -123,6 +140,7 @@ class HomeView extends GetView<HomeController> {
 
                       if (controller.isPlay.value) {
                         controller.startCounter(c);
+                        controller.permuteCurrentCounterPosition();
                       } else {
                         c.controller!.pause();
                       }
@@ -146,7 +164,7 @@ class HomeView extends GetView<HomeController> {
                       width: 100,
                       height: 60,
                       decoration: BoxDecoration(
-                        color: Colors.orange,
+                        color: Colors.blue,
                         borderRadius: BorderRadius.circular(30),
                       ),
                       child: Center(
@@ -174,48 +192,65 @@ class HomeView extends GetView<HomeController> {
                       .map(
                         (counter) => counter.state.value == CounterState.init
                             ? Container(
-                                margin: EdgeInsets.all(2),
+                                margin: counter.position.value ==
+                                        CounterPosition.left
+                                    ? EdgeInsets.only(
+                                        bottom: 1, right: 50, left: 0)
+                                    : EdgeInsets.only(
+                                        bottom: 1, right: 0, left: 50),
                                 height: 120,
                                 width: 120,
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(100),
                                   color: Colors.orange,
+                                  border: Border.all(
+                                    color: Colors.white,
+                                    width: 5,
+                                  ),
                                 ),
                                 child: Center(
                                   child: Text(
                                     "${counter.id}",
                                     style: TextStyle(
-                                      fontSize: 50,
-                                      color: Colors.black,
+                                      fontSize: 60,
+                                      color: Colors.black.withOpacity(0.5),
+                                      fontWeight: FontWeight.bold,
                                     ),
                                   ),
                                 ),
                               )
                             : Container(
-                                margin: EdgeInsets.all(2),
+                                margin: counter.position.value ==
+                                        CounterPosition.left
+                                    ? EdgeInsets.only(
+                                        bottom: 1, right: 50, left: 0)
+                                    : EdgeInsets.only(
+                                        bottom: 1, right: 0, left: 50),
                                 height: 120,
                                 width: 120,
                                 child: Countdown(
-                                  seconds: 10,
+                                  seconds: counter.delai,
                                   controller: counter.controller,
                                   build: (BuildContext context, double time) =>
                                       LiquidCircularProgressIndicator(
-                                    value: ((time * 1) / 10) == 0.0
+                                    value: ((time * 1) / counter.delai) == 0.0
                                         ? -1
-                                        : ((time * 1) / 10), // Defaults to 0.5.
+                                        : ((time * 1) /
+                                            counter.delai), // Defaults to 0.5.
                                     valueColor: AlwaysStoppedAnimation(
                                       counter.color,
                                     ),
                                     backgroundColor:
                                         Get.theme.scaffoldBackgroundColor,
-                                    borderColor: counter.color,
-                                    borderWidth: 1,
+                                    borderColor: Colors.white,
+                                    borderWidth: 5,
                                     direction: Axis.vertical,
                                     center: Text(
                                       "${counter.id}",
                                       style: TextStyle(
-                                        fontSize: 40,
-                                        color: Colors.black,
+                                        fontSize: 60,
+                                        color: Colors.black.withOpacity(0.5),
+                                        fontWeight: FontWeight.bold,
                                       ),
                                     ),
                                   ),

@@ -6,13 +6,38 @@ import 'package:qpc/app/data/models/user_model.dart';
 
 class HomeController extends GetxController with SingleGetTickerProviderMixin {
   List<CounterModel> counters = [
-    CounterModel(id: 4, color: Colors.orange),
-    CounterModel(id: 3, color: Colors.orange),
-    CounterModel(id: 2, color: Colors.orange),
-    CounterModel(id: 1, color: Colors.red),
+    CounterModel(
+      id: 4,
+      color: Colors.orange,
+      delai: 10,
+      position: CounterPosition.right.obs,
+    ),
+    CounterModel(
+      id: 3,
+      color: Colors.orange,
+      delai: 5,
+      position: CounterPosition.left.obs,
+    ),
+    CounterModel(
+      id: 2,
+      color: Colors.orange,
+      delai: 3,
+      position: CounterPosition.right.obs,
+    ),
+    CounterModel(
+      id: 1,
+      color: Colors.red,
+      delai: 2,
+      position: CounterPosition.left.obs,
+    ),
   ];
 
-  CounterModel currentCounterModel = CounterModel(id: 4, color: Colors.blue);
+  CounterModel currentCounterModel = CounterModel(
+    id: 4,
+    color: Colors.orange,
+    delai: 10,
+    position: CounterPosition.right.obs,
+  );
 
   RxBool isPlay = false.obs;
 
@@ -26,6 +51,14 @@ class HomeController extends GetxController with SingleGetTickerProviderMixin {
     currentCounterModel = counterModel;
     counterModel.state.value = CounterState.start;
     counterModel.controller!.start();
+  }
+
+  void permuteCurrentCounterPosition() {
+    if (currentCounterModel.position.value == CounterPosition.left) {
+      currentCounterModel.position.value = CounterPosition.right;
+    } else {
+      currentCounterModel.position.value = CounterPosition.left;
+    }
   }
 
   @override
@@ -45,31 +78,60 @@ class HomeController extends GetxController with SingleGetTickerProviderMixin {
     startTimer(c);
   }
 
-  void init() {
-    user1NameCtrl.text = "";
-    user2NameCtrl.text = "";
-
-    counters = [
-      CounterModel(id: 4, color: Colors.orange),
-      CounterModel(id: 3, color: Colors.orange),
-      CounterModel(id: 2, color: Colors.orange),
-      CounterModel(id: 1, color: Colors.red),
+  void initCounter() {
+    counters = counters = [
+      CounterModel(
+        id: 4,
+        color: Colors.orange,
+        delai: 10,
+        position: CounterPosition.right.obs,
+      ),
+      CounterModel(
+        id: 3,
+        color: Colors.orange,
+        delai: 5,
+        position: CounterPosition.left.obs,
+      ),
+      CounterModel(
+        id: 2,
+        color: Colors.orange,
+        delai: 3,
+        position: CounterPosition.right.obs,
+      ),
+      CounterModel(
+        id: 1,
+        color: Colors.red,
+        delai: 2,
+        position: CounterPosition.left.obs,
+      ),
     ];
+    currentCounterModel = CounterModel(
+      id: 4,
+      color: Colors.orange,
+      delai: 10,
+      position: CounterPosition.right.obs,
+    );
 
-    user1.score.value = 0;
-    user2.score.value = 0;
     isPlay.value = false;
     update();
   }
 
+  void initScore() {
+    user1.score.value = 0;
+    user2.score.value = 0;
+  }
+
   void next() {
-    final founds =
+    final nextCounter =
         counters.where((c) => c.controller?.isCompleted == null).toList();
-    if (founds.isEmpty) {
+    final previousCounter =
+        counters.where((c) => c.controller?.isCompleted == true).toList();
+    previousCounter.last.state.value = CounterState.finish;
+    if (nextCounter.isEmpty) {
       isPlay.value = false;
       return;
     }
-    startTimer(founds.first);
+    startTimer(nextCounter.first);
   }
 
   void addScore(UserModel user) {
