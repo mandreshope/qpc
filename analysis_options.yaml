@@ -1,0 +1,41 @@
+linter:
+  rules:
+    - always_declare_return_types
+    - prefer_if_elements_to_conditional_expressions
+    - curly_braces_in_flow_control_structures
+    - camel_case_types
+    - avoid_void_async
+    - file_names
+    - prefer_foreach
+    - prefer_if_null_operators
+    - prefer_final_in_for_each
+    - prefer_contains
+    - prefer_conditional_assignment
+    - prefer_inlined_adds
+    - prefer_is_not_empty
+    - prefer_is_not_operator
+    - prefer_null_aware_operators
+    - prefer_spread_collections
+    - unnecessary_new
+    - unnecessary_parenthesis
+    - package_api_docs
+    - type_annotate_public_apis
+    - unawaited_futures
+    - avoid_positional_boolean_parameters
+    - always_put_required_named_parameters_first
+    - always_require_non_null_named_parameters
+    - use_key_in_widget_constructors
+    - unnecessary_statements
+    - invariant_booleans
+    - avoid_slow_async_io
+    - always_use_package_imports
+    - no_duplicate_case_values
+    - empty_catches
+    - exhaustive_cases
+    - lines_longer_than_80_chars
+    - prefer_initializing_formals
+    - prefer_typing_uninitialized_variables
+    - unnecessary_null_checks
+    - unnecessary_null_aware_assignments
+    - unnecessary_await_in_return
+

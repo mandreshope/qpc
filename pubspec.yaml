@@ -1,0 +1,23 @@
+name: qpc
+version: 1.0.0+1
+publish_to: none
+description: Question pour un champion.
+environment: 
+  sdk: '>=2.12.0 <3.0.0'
+
+dependencies: 
+  cupertino_icons: ^1.0.2
+  get: 4.2.1+2
+  flutter: 
+    sdk: flutter
+  
+  liquid_progress_indicator: ^0.4.0
+  timer_count_down: ^2.2.0
+
+dev_dependencies: 
+  flutter_test: 
+    sdk: flutter
+
+flutter: 
+  uses-material-design: true
+
