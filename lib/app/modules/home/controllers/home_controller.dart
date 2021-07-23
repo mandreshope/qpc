@@ -4,37 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:qpc/app/data/models/counter_model.dart';
 import 'package:qpc/app/data/models/user_model.dart';
+import 'package:qpc/app/data/providers/data_provider.dart';
 
 class HomeController extends GetxController with SingleGetTickerProviderMixin {
   Player player = Player(id: 69420);
   Media chrono = Media.asset("assets/chrono.mp3");
 
-  List<CounterModel> counters = [
-    CounterModel(
-      id: 4,
-      color: Colors.orange,
-      delai: 10,
-      position: CounterPosition.right.obs,
-    ),
-    CounterModel(
-      id: 3,
-      color: Colors.orange,
-      delai: 5,
-      position: CounterPosition.left.obs,
-    ),
-    CounterModel(
-      id: 2,
-      color: Colors.orange,
-      delai: 3,
-      position: CounterPosition.right.obs,
-    ),
-    CounterModel(
-      id: 1,
-      color: Colors.red,
-      delai: 2,
-      position: CounterPosition.left.obs,
-    ),
-  ];
+  List<CounterModel> counters = DataProvider().rightCounters;
 
   CounterModel currentCounterModel = CounterModel(
     id: 4,
@@ -83,40 +59,24 @@ class HomeController extends GetxController with SingleGetTickerProviderMixin {
   }
 
   void initCounter({CounterPosition? firstPosition}) {
-    counters = counters = [
-      CounterModel(
-        id: 4,
-        color: Colors.orange,
-        delai: 10,
-        position: firstPosition?.obs ?? CounterPosition.right.obs,
-      ),
-      CounterModel(
-        id: 3,
-        color: Colors.orange,
-        delai: 5,
-        position: CounterPosition.left.obs,
-      ),
-      CounterModel(
-        id: 2,
-        color: Colors.orange,
-        delai: 3,
-        position: CounterPosition.right.obs,
-      ),
-      CounterModel(
-        id: 1,
-        color: Colors.red,
-        delai: 2,
-        position: CounterPosition.left.obs,
-      ),
-    ];
-    currentCounterModel = CounterModel(
-      id: 4,
-      color: Colors.orange,
-      delai: 10,
-      position: CounterPosition.right.obs,
-    );
+    if (firstPosition != null) {
+      switch (firstPosition) {
+        case CounterPosition.left:
+          counters = DataProvider().leftCounters;
+          ;
+          break;
+        case CounterPosition.right:
+          counters = DataProvider().rightCounters;
+          ;
+          break;
+        default:
+          counters = DataProvider().rightCounters;
+          ;
+      }
+    }
 
     isPlay.value = false;
+    player.stop();
     update();
   }
 
