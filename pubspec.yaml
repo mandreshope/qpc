@@ -13,6 +13,7 @@ dependencies:
   
   liquid_progress_indicator: ^0.4.0
   timer_count_down: ^2.2.0
+  dart_vlc: ^0.0.9
 
 dev_dependencies: 
   flutter_test: 
@@ -22,4 +23,5 @@ flutter:
   uses-material-design: true
   assets:
     - assets/images/
+    - assets/
 

@@ -1,3 +1,4 @@
+import 'package:dart_vlc/dart_vlc.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -5,6 +6,9 @@ import 'package:qpc/app/data/models/counter_model.dart';
 import 'package:qpc/app/data/models/user_model.dart';
 
 class HomeController extends GetxController with SingleGetTickerProviderMixin {
+  Player player = Player(id: 69420);
+  Media chrono = Media.asset("assets/chrono.mp3");
+
   List<CounterModel> counters = [
     CounterModel(
       id: 4,
@@ -78,13 +82,13 @@ class HomeController extends GetxController with SingleGetTickerProviderMixin {
     startTimer(c);
   }
 
-  void initCounter() {
+  void initCounter({CounterPosition? firstPosition}) {
     counters = counters = [
       CounterModel(
         id: 4,
         color: Colors.orange,
         delai: 10,
-        position: CounterPosition.right.obs,
+        position: firstPosition?.obs ?? CounterPosition.right.obs,
       ),
       CounterModel(
         id: 3,
@@ -116,9 +120,48 @@ class HomeController extends GetxController with SingleGetTickerProviderMixin {
     update();
   }
 
+  void controll() {
+    isPlay.value = !isPlay.value;
+    final c = counters.firstWhere((c) => currentCounterModel.id == c.id);
+
+    if (isPlay.value) {
+      player.open(
+        Playlist(
+          playlistMode: PlaylistMode.loop,
+          medias: [
+            chrono,
+            chrono,
+            chrono,
+            chrono,
+            chrono,
+            chrono,
+          ],
+        ),
+        autoStart: true, // default
+      );
+      startCounter(c);
+      permuteCurrentCounterPosition();
+    } else {
+      player.pause();
+      c.controller!.pause();
+    }
+  }
+
   void initScore() {
     user1.score.value = 0;
     user2.score.value = 0;
+  }
+
+  void user1Answer() {
+    initCounter(
+      firstPosition: CounterPosition.left,
+    );
+  }
+
+  void user2Answer() {
+    initCounter(
+      firstPosition: CounterPosition.right,
+    );
   }
 
   void next() {
@@ -129,6 +172,7 @@ class HomeController extends GetxController with SingleGetTickerProviderMixin {
     previousCounter.last.state.value = CounterState.finish;
     if (nextCounter.isEmpty) {
       isPlay.value = false;
+      player.stop();
       return;
     }
     startTimer(nextCounter.first);
