@@ -59,20 +59,33 @@ class HomeController extends GetxController with SingleGetTickerProviderMixin {
   }
 
   void initCounter({CounterPosition? firstPosition}) {
-    if (firstPosition != null) {
-      switch (firstPosition) {
-        case CounterPosition.left:
-          counters = DataProvider().leftCounters;
-          ;
-          break;
-        case CounterPosition.right:
-          counters = DataProvider().rightCounters;
-          ;
-          break;
-        default:
-          counters = DataProvider().rightCounters;
-          ;
-      }
+    switch (firstPosition) {
+      case CounterPosition.left:
+        counters = DataProvider().leftCounters;
+        currentCounterModel = CounterModel(
+          id: 4,
+          color: Colors.orange,
+          delai: 10,
+          position: CounterPosition.left.obs,
+        );
+        break;
+      case CounterPosition.right:
+        counters = DataProvider().rightCounters;
+        currentCounterModel = CounterModel(
+          id: 4,
+          color: Colors.orange,
+          delai: 10,
+          position: CounterPosition.right.obs,
+        );
+        break;
+      default:
+        counters = DataProvider().rightCounters;
+        currentCounterModel = CounterModel(
+          id: 4,
+          color: Colors.orange,
+          delai: 10,
+          position: CounterPosition.right.obs,
+        );
     }
 
     isPlay.value = false;
