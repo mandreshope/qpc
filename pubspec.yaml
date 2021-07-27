@@ -1,5 +1,5 @@
 name: qpc
-version: 1.0.0+1
+version: 1.2.0+2
 publish_to: none
 description: Question pour un champion.
 environment: 
