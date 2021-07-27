@@ -5,12 +5,18 @@ import 'package:get/get.dart';
 import 'package:qpc/app/data/models/counter_model.dart';
 import 'package:qpc/app/data/models/user_model.dart';
 import 'package:qpc/app/data/providers/data_provider.dart';
+import 'package:qpc/app/utils/currency_formatter.dart';
 
 class HomeController extends GetxController with SingleGetTickerProviderMixin {
   Player player = Player(id: 69420);
   Media chrono = Media.asset("assets/chrono.mp3");
 
   List<CounterModel> counters = DataProvider().rightCounters;
+
+  final CustomTextInputFormatter formatter = CustomTextInputFormatter(
+    separator: " ",
+    decimalSeparator: ",",
+  );
 
   CounterModel currentCounterModel = CounterModel(
     id: 4,
@@ -34,10 +40,12 @@ class HomeController extends GetxController with SingleGetTickerProviderMixin {
   }
 
   void permuteCurrentCounterPosition() {
-    if (currentCounterModel.position.value == CounterPosition.left) {
-      currentCounterModel.position.value = CounterPosition.right;
-    } else {
-      currentCounterModel.position.value = CounterPosition.left;
+    if (currentCounterModel.id != 4) {
+      if (currentCounterModel.position.value == CounterPosition.left) {
+        currentCounterModel.position.value = CounterPosition.right;
+      } else {
+        currentCounterModel.position.value = CounterPosition.left;
+      }
     }
   }
 
@@ -152,10 +160,15 @@ class HomeController extends GetxController with SingleGetTickerProviderMixin {
   }
 
   void addScore(UserModel user) {
+    if (user.scoreCtrl.text.isEmpty) {
+      return;
+    }
+    int score = formatter.parse(user.scoreCtrl.text)?.toInt() ?? 0;
     final isCompleted = currentCounterModel.controller?.isCompleted;
     if (isCompleted != null) {
       if (!isCompleted) {
-        user.score.value = user.score.value + currentCounterModel.id;
+        user.score.value = score + currentCounterModel.id;
+        user.scoreCtrl.text = user.score.value.toString();
       }
     }
   }

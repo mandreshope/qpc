@@ -161,29 +161,42 @@ class HomeView extends GetView<HomeController> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Obx(
-                        () => InkWell(
-                          onTap: controller.isPlay.value
-                              ? null
-                              : () {
-                                  controller.addScore(controller.user1);
-                                },
-                          child: Container(
-                            width: 100,
-                            height: 60,
-                            decoration: BoxDecoration(
-                              color: Colors.red,
-                              borderRadius: BorderRadius.circular(30),
+                        () => Row(
+                          children: [
+                            ElevatedButton(
+                              style: ButtonStyle(
+                                elevation: MaterialStateProperty.all(0),
+                                backgroundColor: MaterialStateProperty.all(
+                                    Colors.grey[200]!.withOpacity(0.1)),
+                              ),
+                              onPressed: controller.isPlay.value
+                                  ? null
+                                  : () {
+                                      controller.addScore(controller.user1);
+                                    },
+                              child: Icon(
+                                Icons.add,
+                                color: Colors.white.withOpacity(0.5),
+                              ),
                             ),
-                            child: Center(
-                              child: Text(
-                                "${controller.user1.score.value}",
+                            Container(
+                              width: 100,
+                              decoration: BoxDecoration(
+                                color: Colors.red,
+                                borderRadius: BorderRadius.circular(60),
+                              ),
+                              child: TextField(
+                                controller: controller.user1.scoreCtrl,
+                                inputFormatters: [controller.formatter],
+                                textAlign: TextAlign.center,
                                 style: TextStyle(
-                                  fontSize: 30,
-                                  color: Colors.white,
+                                    fontSize: 45, color: Colors.white),
+                                decoration: InputDecoration(
+                                  border: InputBorder.none,
                                 ),
                               ),
                             ),
-                          ),
+                          ],
                         ),
                       ),
                       ElevatedButton(
@@ -205,29 +218,42 @@ class HomeView extends GetView<HomeController> {
                         ),
                       ),
                       Obx(
-                        () => InkWell(
-                          onTap: controller.isPlay.value
-                              ? null
-                              : () {
-                                  controller.addScore(controller.user2);
-                                },
-                          child: Container(
-                            width: 100,
-                            height: 60,
-                            decoration: BoxDecoration(
-                              color: Colors.blue,
-                              borderRadius: BorderRadius.circular(30),
-                            ),
-                            child: Center(
-                              child: Text(
-                                "${controller.user2.score.value}",
+                        () => Row(
+                          children: [
+                            Container(
+                              width: 100,
+                              decoration: BoxDecoration(
+                                color: Colors.orange,
+                                borderRadius: BorderRadius.circular(60),
+                              ),
+                              child: TextField(
+                                controller: controller.user2.scoreCtrl,
+                                inputFormatters: [controller.formatter],
+                                textAlign: TextAlign.center,
                                 style: TextStyle(
-                                  fontSize: 30,
-                                  color: Colors.white,
+                                    fontSize: 45, color: Colors.white),
+                                decoration: InputDecoration(
+                                  border: InputBorder.none,
                                 ),
                               ),
                             ),
-                          ),
+                            ElevatedButton(
+                              style: ButtonStyle(
+                                elevation: MaterialStateProperty.all(0),
+                                backgroundColor: MaterialStateProperty.all(
+                                    Colors.grey[200]!.withOpacity(0.1)),
+                              ),
+                              onPressed: controller.isPlay.value
+                                  ? null
+                                  : () {
+                                      controller.addScore(controller.user2);
+                                    },
+                              child: Icon(
+                                Icons.add,
+                                color: Colors.white.withOpacity(0.5),
+                              ),
+                            ),
+                          ],
                         ),
                       ),
                     ],

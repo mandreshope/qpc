@@ -7,7 +7,8 @@
         {
             "name": "qpc",
             "request": "launch",
-            "type": "dart"
+            "type": "dart",
+            // "args": ["-d", "windows","--host-vmservice-port", "8000"],
         },
         {
             "name": "qpc (profile mode)",
