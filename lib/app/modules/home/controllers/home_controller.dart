@@ -26,6 +26,7 @@ class HomeController extends GetxController with SingleGetTickerProviderMixin {
   );
 
   RxBool isPlay = false.obs;
+  bool isFirstPlay = true;
 
   UserModel user1 = UserModel(id: 1, name: "user1", score: 0.obs);
   UserModel user2 = UserModel(id: 1, name: "user2", score: 0.obs);
@@ -40,7 +41,7 @@ class HomeController extends GetxController with SingleGetTickerProviderMixin {
   }
 
   void permuteCurrentCounterPosition() {
-    if (currentCounterModel.id != 4) {
+    if (!isFirstPlay) {
       if (currentCounterModel.position.value == CounterPosition.left) {
         currentCounterModel.position.value = CounterPosition.right;
       } else {
@@ -97,6 +98,7 @@ class HomeController extends GetxController with SingleGetTickerProviderMixin {
     }
 
     isPlay.value = false;
+    isFirstPlay = true;
     player.stop();
     update();
   }
@@ -122,6 +124,7 @@ class HomeController extends GetxController with SingleGetTickerProviderMixin {
       );
       startCounter(c);
       permuteCurrentCounterPosition();
+      isFirstPlay = false;
     } else {
       player.pause();
       c.controller!.pause();
@@ -130,7 +133,9 @@ class HomeController extends GetxController with SingleGetTickerProviderMixin {
 
   void initScore() {
     user1.score.value = 0;
+    user1.scoreCtrl.text = "0";
     user2.score.value = 0;
+    user2.scoreCtrl.text = "0";
   }
 
   void user1Answer() {
