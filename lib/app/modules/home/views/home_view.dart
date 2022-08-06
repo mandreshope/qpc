@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_countdown_timer/flutter_countdown_timer.dart';
 import 'package:get/get.dart';
 import 'package:qpc/app/data/models/counter_model.dart';
 import 'package:qpc/app/modules/home/controllers/home_controller.dart';
@@ -105,7 +106,7 @@ class HomeView extends GetView<HomeController> {
                               textAlign: TextAlign.center,
                               style: TextStyle(fontSize: 45),
                               decoration: InputDecoration(
-                                hintText: "user2",
+                                hintText: "timer en seconde",
                                 border: InputBorder.none,
                               ),
                             ),
@@ -136,20 +137,20 @@ class HomeView extends GetView<HomeController> {
                           color: Colors.white.withOpacity(0.5),
                         ),
                       ),
-                      ElevatedButton(
-                        style: ButtonStyle(
-                          elevation: MaterialStateProperty.all(0),
-                          backgroundColor: MaterialStateProperty.all(
-                              Colors.grey[200]!.withOpacity(0.1)),
-                        ),
-                        onPressed: () {
-                          controller.user2Answer();
-                        },
-                        child: Icon(
-                          Icons.question_answer,
-                          color: Colors.white.withOpacity(0.5),
-                        ),
-                      ),
+                      // ElevatedButton(
+                      //   style: ButtonStyle(
+                      //     elevation: MaterialStateProperty.all(0),
+                      //     backgroundColor: MaterialStateProperty.all(
+                      //         Colors.grey[200]!.withOpacity(0.1)),
+                      //   ),
+                      //   onPressed: () {
+                      //     controller.user2Answer();
+                      //   },
+                      //   child: Icon(
+                      //     Icons.question_answer,
+                      //     color: Colors.white.withOpacity(0.5),
+                      //   ),
+                      // ),
                     ],
                   ),
                 ),
@@ -217,134 +218,153 @@ class HomeView extends GetView<HomeController> {
                           ),
                         ),
                       ),
-                      Obx(
-                        () => Row(
-                          children: [
-                            Container(
-                              width: 100,
-                              decoration: BoxDecoration(
-                                color: Colors.orange,
-                                borderRadius: BorderRadius.circular(60),
-                              ),
-                              child: TextField(
-                                controller: controller.user2.scoreCtrl,
-                                inputFormatters: [controller.formatter],
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                    fontSize: 45, color: Colors.white),
-                                decoration: InputDecoration(
-                                  border: InputBorder.none,
-                                ),
-                              ),
-                            ),
-                            ElevatedButton(
-                              style: ButtonStyle(
-                                elevation: MaterialStateProperty.all(0),
-                                backgroundColor: MaterialStateProperty.all(
-                                    Colors.grey[200]!.withOpacity(0.1)),
-                              ),
-                              onPressed: controller.isPlay.value
-                                  ? null
-                                  : () {
-                                      controller.addScore(controller.user2);
-                                    },
-                              child: Icon(
-                                Icons.add,
-                                color: Colors.white.withOpacity(0.5),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
+                      // Obx(
+                      //   () => Row(
+                      //     children: [
+                      //       Container(
+                      //         width: 100,
+                      //         decoration: BoxDecoration(
+                      //           color: Colors.orange,
+                      //           borderRadius: BorderRadius.circular(60),
+                      //         ),
+                      //         child: TextField(
+                      //           controller: controller.user2.scoreCtrl,
+                      //           inputFormatters: [controller.formatter],
+                      //           textAlign: TextAlign.center,
+                      //           style: TextStyle(
+                      //               fontSize: 45, color: Colors.white),
+                      //           decoration: InputDecoration(
+                      //             border: InputBorder.none,
+                      //           ),
+                      //         ),
+                      //       ),
+                      //       ElevatedButton(
+                      //         style: ButtonStyle(
+                      //           elevation: MaterialStateProperty.all(0),
+                      //           backgroundColor: MaterialStateProperty.all(
+                      //               Colors.grey[200]!.withOpacity(0.1)),
+                      //         ),
+                      //         onPressed: controller.isPlay.value
+                      //             ? null
+                      //             : () {
+                      //                 controller.addScore(controller.user2);
+                      //               },
+                      //         child: Icon(
+                      //           Icons.add,
+                      //           color: Colors.white.withOpacity(0.5),
+                      //         ),
+                      //       ),
+                      //     ],
+                      //   ),
+                      // ),
                     ],
                   ),
                 ),
-                Center(
-                  child: GetBuilder<HomeController>(
-                    init: controller,
-                    builder: (_) => Obx(
-                      () => Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: controller.counters
-                            .map(
-                              (counter) => counter.state.value ==
-                                      CounterState.init
-                                  ? Container(
-                                      margin: counter.position.value ==
-                                              CounterPosition.left
-                                          ? EdgeInsets.only(
-                                              bottom: 1, right: 50, left: 0)
-                                          : EdgeInsets.only(
-                                              bottom: 1, right: 0, left: 50),
-                                      height: 120,
-                                      width: 120,
-                                      decoration: BoxDecoration(
-                                        color: Colors.orange,
-                                        border: Border.all(
-                                          color: Colors.white,
-                                          width: 5,
-                                        ),
-                                      ),
-                                      child: Center(
-                                        child: Text(
-                                          "${counter.id}",
-                                          style: TextStyle(
-                                            fontSize: 60,
-                                            color: Colors.black,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                      ),
-                                    )
-                                  : Container(
-                                      margin: counter.position.value ==
-                                              CounterPosition.left
-                                          ? EdgeInsets.only(
-                                              bottom: 1, right: 50, left: 0)
-                                          : EdgeInsets.only(
-                                              bottom: 1, right: 0, left: 50),
-                                      height: 120,
-                                      width: 120,
-                                      child: Countdown(
-                                        seconds: counter.delai,
-                                        controller: counter.controller,
-                                        build: (BuildContext context,
-                                                double time) =>
-                                            LiquidCustomProgressIndicatorView(
-                                          value: ((time * 1) / counter.delai) ==
-                                                  0.0
-                                              ? -1
-                                              : ((time * 1) / counter.delai),
-                                          valueColor: AlwaysStoppedAnimation(
-                                            counter.color,
-                                          ),
-                                          backgroundColor:
-                                              Get.theme.scaffoldBackgroundColor,
-                                          direction: Axis.vertical,
-                                          center: Text(
-                                            "${counter.id}",
-                                            style: TextStyle(
-                                              fontSize: 60,
-                                              color: Colors.black,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                          ),
-                                        ),
-                                        interval: Duration(milliseconds: 100),
-                                        onFinished: () {
-                                          counter.controller!.isCompleted =
-                                              true;
-
-                                          controller.next();
-                                        },
-                                      ),
-                                    ),
-                            )
-                            .toList(),
+                GetBuilder<HomeController>(builder: (_) {
+                  return Center(
+                    child: Container(
+                      height: 200,
+                      color: Colors.black45,
+                      child: Center(
+                        child: CountdownTimer(
+                          controller: controller.controller,
+                          endTime: controller.endTime,
+                          textStyle: TextStyle(
+                              fontSize: 150,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white),
+                          onEnd: () {},
+                        ),
                       ),
                     ),
-                  ),
-                ),
+                  );
+                }),
+                // Center(
+                //   child: GetBuilder<HomeController>(
+                //     init: controller,
+                //     builder: (_) => Obx(
+                //       () => Column(
+                //         mainAxisAlignment: MainAxisAlignment.center,
+                //         children: controller.counters
+                //             .map(
+                //               (counter) => counter.state.value ==
+                //                       CounterState.init
+                //                   ? Container(
+                //                       margin: counter.position.value ==
+                //                               CounterPosition.left
+                //                           ? EdgeInsets.only(
+                //                               bottom: 1, right: 50, left: 0)
+                //                           : EdgeInsets.only(
+                //                               bottom: 1, right: 0, left: 50),
+                //                       height: 120,
+                //                       width: 120,
+                //                       decoration: BoxDecoration(
+                //                         color: Colors.orange,
+                //                         border: Border.all(
+                //                           color: Colors.white,
+                //                           width: 5,
+                //                         ),
+                //                       ),
+                //                       child: Center(
+                //                         child: Text(
+                //                           "${counter.id}",
+                //                           style: TextStyle(
+                //                             fontSize: 60,
+                //                             color: Colors.black,
+                //                             fontWeight: FontWeight.bold,
+                //                           ),
+                //                         ),
+                //                       ),
+                //                     )
+                //                   : Container(
+                //                       margin: counter.position.value ==
+                //                               CounterPosition.left
+                //                           ? EdgeInsets.only(
+                //                               bottom: 1, right: 50, left: 0)
+                //                           : EdgeInsets.only(
+                //                               bottom: 1, right: 0, left: 50),
+                //                       height: 120,
+                //                       width: 120,
+                //                       child: Countdown(
+                //                         seconds: counter.delai,
+                //                         controller: counter.controller,
+                //                         build: (BuildContext context,
+                //                                 double time) =>
+                //                             LiquidCustomProgressIndicatorView(
+                //                           value: ((time * 1) / counter.delai) ==
+                //                                   0.0
+                //                               ? -1
+                //                               : ((time * 1) / counter.delai),
+                //                           valueColor: AlwaysStoppedAnimation(
+                //                             counter.color,
+                //                           ),
+                //                           backgroundColor:
+                //                               Get.theme.scaffoldBackgroundColor,
+                //                           direction: Axis.vertical,
+                //                           center: Text(
+                //                             "${counter.id}",
+                //                             style: TextStyle(
+                //                               fontSize: 60,
+                //                               color: Colors.black,
+                //                               fontWeight: FontWeight.bold,
+                //                             ),
+                //                           ),
+                //                         ),
+                //                         interval: Duration(milliseconds: 100),
+                //                         onFinished: () {
+                //                           counter.controller!.isCompleted =
+                //                               true;
+
+                //                           controller.next();
+                //                         },
+                //                       ),
+                //                     ),
+                //             )
+                //             .toList(),
+                //       ),
+                //     ),
+                //   ),
+                // ),
               ],
             ),
           ),

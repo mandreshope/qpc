@@ -1,6 +1,6 @@
-import 'package:dart_vlc/dart_vlc.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_countdown_timer/countdown_timer_controller.dart';
 import 'package:get/get.dart';
 import 'package:qpc/app/data/models/counter_model.dart';
 import 'package:qpc/app/data/models/user_model.dart';
@@ -8,8 +8,8 @@ import 'package:qpc/app/data/providers/data_provider.dart';
 import 'package:qpc/app/utils/currency_formatter.dart';
 
 class HomeController extends GetxController with SingleGetTickerProviderMixin {
-  Player player = Player(id: 69420);
-  Media chrono = Media.asset("assets/chrono.mp3");
+  // Player player = Player(id: 69420);
+  // Media chrono = Media.asset("assets/chrono.mp3");
 
   List<CounterModel> counters = DataProvider().rightCounters;
 
@@ -34,10 +34,20 @@ class HomeController extends GetxController with SingleGetTickerProviderMixin {
   TextEditingController user1NameCtrl = TextEditingController();
   TextEditingController user2NameCtrl = TextEditingController();
 
+  int endTime = 0;
+
+  CountdownTimerController? controller;
+
   void startTimer(CounterModel counterModel) {
     currentCounterModel = counterModel;
     counterModel.state.value = CounterState.start;
     counterModel.controller!.start();
+
+    endTime = int.tryParse(user2NameCtrl.text) ?? 0;
+    controller = CountdownTimerController(
+        endTime: DateTime.now().millisecondsSinceEpoch + 1000 * endTime);
+    controller?.start();
+    update();
   }
 
   void permuteCurrentCounterPosition() {
@@ -99,7 +109,7 @@ class HomeController extends GetxController with SingleGetTickerProviderMixin {
 
     isPlay.value = false;
     isFirstPlay = true;
-    player.stop();
+    // player.stop();
     update();
   }
 
@@ -108,25 +118,25 @@ class HomeController extends GetxController with SingleGetTickerProviderMixin {
     final c = counters.firstWhere((c) => currentCounterModel.id == c.id);
 
     if (isPlay.value) {
-      player.open(
-        Playlist(
-          playlistMode: PlaylistMode.loop,
-          medias: [
-            chrono,
-            chrono,
-            chrono,
-            chrono,
-            chrono,
-            chrono,
-          ],
-        ),
-        autoStart: true, // default
-      );
+      // player.open(
+      //   Playlist(
+      //     playlistMode: PlaylistMode.loop,
+      //     medias: [
+      //       chrono,
+      //       chrono,
+      //       chrono,
+      //       chrono,
+      //       chrono,
+      //       chrono,
+      //     ],
+      //   ),
+      //   autoStart: true, // default
+      // );
       startCounter(c);
       permuteCurrentCounterPosition();
       isFirstPlay = false;
     } else {
-      player.pause();
+      // player.pause();
       c.controller!.pause();
     }
   }
@@ -158,7 +168,7 @@ class HomeController extends GetxController with SingleGetTickerProviderMixin {
     previousCounter.last.state.value = CounterState.finish;
     if (nextCounter.isEmpty) {
       isPlay.value = false;
-      player.stop();
+      // player.stop();
       return;
     }
     startTimer(nextCounter.first);
